@@ -20,6 +20,21 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "drs_responses:1:1"
+    depends_on:
+      - zookeeper
+    networks:
+      - kafkaGoExample-net
+  kowl:
+    image: quay.io/cloudhut/kowl
+    restart: on-failure
+    hostname: kowl
+    volumes:
+      - ./config.yaml:/etc/kowl/config.yaml
+    ports:
+      - "8080:8080"
+    entrypoint: ./kowl --config.filepath=/etc/kowl/config.yaml
+    depends_on:
+      - kafka
     networks:
       - kafkaGoExample-net
 
